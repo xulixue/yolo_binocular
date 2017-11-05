@@ -1,0 +1,6 @@
+win下： 
+    win_prj 文件夹把workbench和project都放在这一个里面了。
+    src和inc存放所有的代码，
+
+为了兼容性，stdafx.h 里面用了 WIN32的宏定义，来判断是win下还是linux下。
+这么做的目的是方便ubuntu下编译工程。

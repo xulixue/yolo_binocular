@@ -1,0 +1,6 @@
+build
+haarcascade_frontalface_alt2.xml
+win_prj/x64
+win_prj/ipch
+win_prj/*.filters
+win_prj/*.sdf

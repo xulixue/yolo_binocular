@@ -143,7 +143,7 @@ void SelDepth::GetAllDeepth(vector<SelBox> &sbs){
         else{
             sbs[i].deepth_mm = (int)(100.0 * 86 / sbs[i].ret_x2_de_x1);
         }
-        cout << "deepth: " << sbs[i].deepth_mm << endl;
+        cout << sbs[i].name << "deepth: " << sbs[i].deepth_mm << endl;
     }
 
 

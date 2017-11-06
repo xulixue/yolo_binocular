@@ -38,7 +38,7 @@ int main()
 	while (true)
 	{
 #if 0
-		//2.¶ÁÍ¼Æ¬
+
 		srcImg = imread("C:\\Users\\mrxu\\Desktop\\a.jpg");		
 #else
 		capL >> srcImg;

@@ -52,21 +52,20 @@ int main()
 		//imwrite("C:\\Users\\mrxu\\Desktop\\left.jpg", srcImage1);
 		//imwrite("C:\\Users\\mrxu\\Desktop\\right.jpg", srcImage2);
 #endif
-		//�ж��ļ��Ƿ���ȡ�ɹ�
+
 		if (srcImage1.empty() || srcImage2.empty())
 		{
-            //cout << "ͼ������ʧ��!";
+
             cout << "load camer failed";
 			system("pause");
 			return -1;
 		}
 		else
-            //cout << "ͼ�����سɹ�..." << endl << endl;
             cout << "ini camer ok!" << endl << endl;
 
-		SelBox sl1 = { 20, 100, 300, 350, "class1" };  //˳���������ķ��ز���ֵ��
-		SelBox sl2 = { 280, 360, 200, 280, "class2" };  //˳���������ķ��ز���ֵ��
-		SelBox sl3 = { 100, 200, 300, 350, "class2" };  //˳���������ķ��ز���ֵ��
+        SelBox sl1 = { 20, 100, 300, 350, "class1" };
+        SelBox sl2 = { 280, 360, 200, 280, "class2" };
+        SelBox sl3 = { 100, 200, 300, 350, "class2" };
 
 		startTime = clock();
 		//sdp.selbox.push_back(sl1);
@@ -76,9 +75,9 @@ int main()
 		sdp.RunSURF(srcImage1, srcImage2);
 
 		vector<SelBox> sbs;
-        sbs.push_back(sl1);
-		sbs.push_back(sl2);
-        sbs.push_back(sl3);
+//        sbs.push_back(sl1);
+//		  sbs.push_back(sl2);
+//        sbs.push_back(sl3);
 
 		vector<Rect> ret = fc.Detect(srcImage1);
 

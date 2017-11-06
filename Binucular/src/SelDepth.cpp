@@ -15,47 +15,33 @@ void SelDepth::RunSURF(Mat &srcL, Mat &srcR){
     Mat srcImage1, srcImage2;
     Mat srcL1, srcR1;
 
-    //cvtColor(srcL, srcL1, CV_BGR2GRAY);
-    //cvtColor(srcR, srcR1, CV_BGR2GRAY);
-    ////��ʹ��3*3�ں�������
-    //blur(srcL1, srcImage1, Size(3, 3));
-    ////����canny����
-    //Canny(srcImage1, srcImage1, 3, 9, 3);
-    ////��ʹ��3*3�ں�������
-    //blur(srcR1, srcImage2, Size(3, 3));
-    ////����canny����
-    //Canny(srcImage2, srcImage2, 3, 9, 3);
-    //imshow("canny out ", srcImage1);
+
 
 
 #if 0
-    //��y�����ݶ�
     Sobel(srcL, srcL1, CV_16S, 0, 1, 3, 1, 1, BORDER_DEFAULT);
     convertScaleAbs(srcL1, srcImage1);
 
-    //��y�����ݶ�
     Sobel(srcR, srcR1, CV_16S, 0, 1, 3, 1, 1, BORDER_DEFAULT);
     convertScaleAbs(srcR1, srcImage2);
-    imshow("y��soble", srcImage2);
+    imshow("srcImage2", srcImage2);
 #else
     srcImage1 = srcL;
     srcImage2 = srcR;
 #endif
-    //��������ͼ���е�������
-    int minHessian = 2000;      //����Hessian������ֵ
 
-    SurfFeatureDetector detector(minHessian);       //����Surf������
+    int minHessian = 2000;
+
+    SurfFeatureDetector detector(minHessian);
     detector.detect(srcImage1, keypoint1);
     detector.detect(srcImage2, keypoint2);
 
-    //��������������������
     SurfDescriptorExtractor descriptorExtractor;
     Mat descriptors1, descriptors2;
 
     descriptorExtractor.compute(srcImage1, keypoint1, descriptors1);
     descriptorExtractor.compute(srcImage2, keypoint2, descriptors2);
 
-    //ʹ��BruteForceMatcher����������ƥ��
     BFMatcher matcher(NORM_L2);
     if (descriptors1.dims > 0 && descriptors2.dims > 0)
         matcher.match(descriptors1, descriptors2, matches);
@@ -66,25 +52,6 @@ void SelDepth::RunSURF(Mat &srcL, Mat &srcR){
     }
 
 
-    /* ������knn�ķ�������ɸѡ�ģ��ҿ����ò��ϡ������Լ���ɸѡ��
-    BFMatcher matcher(NORM_L2, false);//����һ��ƥ������
-    vector<vector<DMatch>> matches2;//����һ����������װ�����ڵ��ʹν��ڵ�
-    vector<DMatch>matches;//����һ����������װ���������ĵ�
-    matcher.match(descriptors1, descriptors2, matches);//����ƥ��
-    const float ratio = 0.7;//����ֵ��Ϊ0.7  �����Լ�����
-    matches.clear();//����matches
-    matcher.knnMatch(descriptors1, descriptors2, matches2, 2);//����knnmatch
-    for (int n = 0; n < matches2.size(); n++)
-    {
-    DMatch& bestmatch = matches2[n][0];
-    DMatch& bettermatch = matches2[n][1];
-    if (bestmatch.distance < ratio*bettermatch.distance)//ɸѡ�����������ĵ�
-    {
-    matches.push_back(bestmatch);//�����������ĵ㱣����matches
-    }
-    }
-    cout << "match����:" << matches.size() << endl;
-    */
 
 }
 
@@ -110,7 +77,7 @@ void SelDepth::SelMatchEach(SelBox &sb, bool showDebug){
                 cout << "x1:" << x1 << "  y1:" << y1 << "  x2:" << x2 << "  y2:" << y2 << "  x2-x1:" << x2 - x1 << "  y2-y1:" << y2 - y1;
             if (y2 - y1 >= OFFSET_VERTICAL_Y2_Y1 - OFFSET_VERTICAL_Y2_Y1_PERMIT && y2 - y1 <= OFFSET_VERTICAL_Y2_Y1 + OFFSET_VERTICAL_Y2_Y1_PERMIT)
             {
-                sb.selMatch.push_back(tmp);			//��һ��ɸѡ��
+                sb.selMatch.push_back(tmp);
                 if (x2 - x1 > 0)
                 {
                     sum_deep += x2 - x1;
@@ -123,7 +90,7 @@ void SelDepth::SelMatchEach(SelBox &sb, bool showDebug){
                 cout << endl;
         }
     }
-    if (sum_cnt > 0)				//����0
+    if (sum_cnt > 0)
     {
         sum_deep /= sum_cnt;
         sb.ret_x2_de_x1 = sum_deep;
@@ -131,7 +98,7 @@ void SelDepth::SelMatchEach(SelBox &sb, bool showDebug){
     else
     {
         sum_deep = 0;
-        sb.ret_x2_de_x1 = -1;  // ɸѡ֮��û��ƥ������Ҫ
+        sb.ret_x2_de_x1 = -1;
     }
     if (showDebug)
         cout << "sum_cnt:" << sum_cnt << "  aver: (x2-x1)= " << sum_deep << endl;
@@ -159,12 +126,10 @@ void SelDepth::GetAllSelMatch(vector<SelBox> &sbs){
 void SelDepth::ShowAllSelMatch(Mat &imgL, Mat &imgR){
     //if (selAllMatches.empty())
     //	GetAllSelMatch();
-    //����ƥ��������
     Mat matchImage;
 //	cout << "selAllMatches:" << selAllMatches.size() << endl;
     drawMatches(imgL, keypoint1, imgR, keypoint2, selAllMatches, matchImage);
 
-    //��ʾƥ����ͼ��
     namedWindow("Match", WINDOW_AUTOSIZE);
     imshow("Match", matchImage);
     waitKey(10);
@@ -172,7 +137,7 @@ void SelDepth::ShowAllSelMatch(Mat &imgL, Mat &imgR){
 
 void SelDepth::GetAllDeepth(vector<SelBox> &sbs){
     for (int i = 0; i < sbs.size(); i++){
-        if (sbs[i].ret_x2_de_x1 == -1){				//û���ҵ�ƥ�䣬û�в⵽������ֱ�ӷ���-1
+        if (sbs[i].ret_x2_de_x1 == -1){
             sbs[i].deepth_mm = -1;
         }
         else{
@@ -185,7 +150,7 @@ void SelDepth::GetAllDeepth(vector<SelBox> &sbs){
 }
 
 void SelDepth::Clear(void){
-    matches.clear();			//����Ҫ�����ڴ档
+    matches.clear();
     selAllMatches.clear();
     keypoint1.clear();
     keypoint2.clear();

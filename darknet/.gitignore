@@ -16,9 +16,9 @@ convnet/
 decaf/
 submission/
 cfg/
+data/lables/*.png
 darknet
 .fuse*
-
 # OS Generated #
 .DS_Store*
 ehthumbs.db

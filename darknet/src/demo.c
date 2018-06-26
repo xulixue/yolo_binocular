@@ -140,7 +140,7 @@ void *detect_in_thread(void *ptr)
 void *fetch_in_thread(void *ptr)
 {
     free_image(buff[buff_index]);
-    buff[buff_index] = get_image_from_stream(cap);
+    buff[buff_index] = get_image_from_mat(cap);
     if(buff[buff_index].data == 0) {
         demo_done = 1;
         return 0;
@@ -211,14 +211,14 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
 
     if(filename){
         printf("video file: %s\n", filename);
-        cap = open_video_stream(filename, 0, 0, 0, 0);
+        //cap = open_video_stream(filename, 0, 0, 0, 0);
     }else{
-        cap = open_video_stream(0, cam_index, w, h, frames);
+        //cap = open_video_stream(0, cam_index, w, h, frames);
     }
 
-    if(!cap) error("Couldn't connect to webcam.\n");
+    if(!cap) ;  //error("Couldn't connect to webcam.\n");    
 
-    buff[0] = get_image_from_stream(cap);
+    buff[0] = get_image_from_mat(cap);
     buff[1] = copy_image(buff[0]);
     buff[2] = copy_image(buff[0]);
     buff_letter[0] = letterbox_image(buff[0], net->w, net->h);
@@ -310,7 +310,7 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
 
    int count = 0;
    if(!prefix){
-   cvNamedWindow("Demo", CV_WINDOW_NORMAL); 
+   cvNamedWindow("Demo", CV_WINDOW_NORMAL);
    if(fullscreen){
    cvSetWindowProperty("Demo", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
    } else {
@@ -346,4 +346,3 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
     fprintf(stderr, "Demo needs OpenCV for webcam images.\n");
 }
 #endif
-

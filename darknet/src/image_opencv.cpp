@@ -9,6 +9,8 @@ using namespace cv;
 
 extern "C" {
 
+
+
 IplImage *image_to_ipl(image im)
 {
     int x,y,c;
@@ -87,6 +89,20 @@ image get_image_from_stream(void *p)
     return mat_to_image(m);
 }
 
+image get_image_from_mat(void *p){
+    // VideoCapture *cap = (VideoCapture *)p;
+    // Mat m;
+    // *cap >> m;
+    Mat m = imread(IMAGE_R_PATH);
+//    resize(m1, m, Size(480,640),cv::INTER_LINEAR);
+    if(m.empty()) {
+      Mat M(320, 240, CV_8UC3, Scalar(0,255,0) );
+      return mat_to_image(M);
+    }
+    return mat_to_image(m);                         /*这里有调用 mat_to_image opencv里面没有这个函数。单独写函数的话要重新定义，
+    否则编译出现 /usr/include/opencv2/video/background_segm.hpp:47:16: fatal error: list: No such file or directory
+    compilation terminated.*/
+}
 image load_image_cv(char *filename, int channels)
 {
     int flag = -1;

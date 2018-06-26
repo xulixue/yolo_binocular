@@ -13,9 +13,13 @@
 extern "C" {
 #endif
 
+#define IMAGE_R_PATH "/home/mrxu/prj_data/left.jpg"
+#define POS_TXT_R_PATH "/home/mrxu/prj_data/det_rlt.txt"
+
 #ifdef OPENCV
 void *open_video_stream(const char *f, int c, int w, int h, int fps);
 image get_image_from_stream(void *p);
+image get_image_from_mat(void *p);
 image load_image_cv(char *filename, int channels);
 int show_image_cv(image im, const char* name, int ms);
 #endif
@@ -66,4 +70,3 @@ image get_image_layer(image m, int l);
 #endif
 
 #endif
-
